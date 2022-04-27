@@ -1,0 +1,24 @@
+apiVersion: skaffold/v2beta27
+kind: Config
+metadata:
+  name: axum-demo
+build:
+  tagPolicy:
+    customTemplate:
+      template: "latest"
+  insecureRegistries:
+    - 'k3d-registry.local'
+  artifacts:
+  - image: k3d-registry.local/axum-demo
+    docker: {}
+
+
+deploy:
+  kubectl:
+    manifests:
+    - deployment.yaml
+
+portForward:
+- resourceType: service
+  resourceName: axum-demo
+  port: 8080
