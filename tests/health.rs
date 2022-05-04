@@ -3,11 +3,14 @@ use axum::http::Request;
 use axum::http::StatusCode;
 use axum_demo::app::create_app_with_spec;
 use axum_demo::ioc::Container;
+use axum_demo::ioc::TodoFactoryImpl;
 use tower::ServiceExt;
 
 #[tokio::test]
 async fn test_health() {
-    let testing_container = Container::builder().build();
+    let testing_container = Container::builder()
+        .todo_factory(TodoFactoryImpl::default())
+        .build();
     let app = create_app_with_spec(testing_container);
 
     let response = app

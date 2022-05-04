@@ -2,8 +2,10 @@ use std::net::SocketAddr;
 
 mod app;
 mod endpoint;
+mod in_memory_todo;
 mod ioc;
 mod observability;
+mod todo_service;
 
 use observability::*;
 
@@ -21,7 +23,9 @@ async fn main() {
     let app = app::create_app_with_spec(container);
     let app = make_observable(app);
     let addr = SocketAddr::from(([127, 0, 0, 1], 8080));
-    tracing::info!("listening on {}", addr);
+
+    tracing::info!("starting to listen on {}", addr);
+
     axum::Server::bind(&addr)
         .serve(app.into_make_service())
         .await

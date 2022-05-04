@@ -9,11 +9,19 @@ build:
   insecureRegistries:
     - 'k3d-registry.local'
   artifacts:
-  - image: k3d-registry.local/axum-demo
+  - image: axum-demo
     docker: {}
 
 
 deploy:
+  helm:
+    releases:
+      - name: axum-demo-release
+        artifactOverrides:
+          image: axum-demo
+        imageStrategy:
+          helm: {}
+
   kubectl:
     manifests:
     - deployment.yaml

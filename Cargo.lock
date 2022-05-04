@@ -113,12 +113,14 @@ dependencies = [
 name = "axum-demo"
 version = "0.1.0"
 dependencies = [
+ "anyhow",
  "axum",
  "degeneric-macros",
  "hyper",
  "opentelemetry",
  "opentelemetry-otlp",
  "serde",
+ "thiserror",
  "tokio",
  "tower",
  "tower-http",
