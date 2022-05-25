@@ -27,7 +27,7 @@ pub(crate) fn init_tracing() {
     // Create a new OpenTelemetry pipeline
     let otlp_exporter = opentelemetry_otlp::new_exporter()
         .tonic()
-        .with_endpoint("http://localhost:4317");
+        .with_endpoint("http://otlp-opentelemetry-collector:4317");
     // Then pass it into pipeline builder
     let tracer = opentelemetry_otlp::new_pipeline()
         .tracing()
