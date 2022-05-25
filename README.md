@@ -8,18 +8,18 @@ The service additionally has:
 - [opentelemetry](https://opentelemetry.io) observability
 - [degeneric-macros](https://lib.rs/degeneric-macros) dependency container
 - [kubernetes](https://kubernetes.io) deployment (without opentelemetry collector)
-- [skaffold](https://skaffold.dev) configuration
+- [tilt](https://tilt.dev) configuration
 
 # Requirements
 
-- [Docker](https://docker.com) (for k3d to work in skaffold)
+- [Docker](https://docker.com) (for k3d to work)
 - [k3d](https://k3d.io)
-- [skaffold](https://skaffold.dev)
+- [tilt](https://tilt.dev)
 - [kubectl](https://kubernetes.io)
 
 # Running
 
 ```bash
-$ make dev
+$ tilt up
 $ curl localhost:8080
 ```
