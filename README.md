@@ -7,8 +7,8 @@ The service additionally has:
 - [tracing](https://lib.rs/tracing) for logging
 - [opentelemetry](https://opentelemetry.io) observability
 - [degeneric-macros](https://lib.rs/degeneric-macros) dependency container
-- [kubernetes](https://kubernetes.io) deployment (without opentelemetry collector)
-- [tilt](https://tilt.dev) configuration
+- [helm](https://helm.sh) chart
+- [tilt](https://tilt.dev) configuration (including opentelemetry collector!)
 
 # Requirements
 
