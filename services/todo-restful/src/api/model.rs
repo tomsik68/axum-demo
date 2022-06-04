@@ -1,6 +1,6 @@
-use crate::todo_service::{Todo, TodoError};
 use fake::{Dummy, Fake};
 use serde::{Deserialize, Serialize};
+use todo_domain::{Todo, TodoError};
 use utoipa::Component;
 
 #[derive(Deserialize, Debug, Serialize, Dummy, PartialEq, Component)]

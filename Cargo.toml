@@ -1,4 +1,5 @@
 [workspace]
 members = [
-    "services/todo-restful"
+    "services/todo-restful",
+    "crates/todo-domain",
 ]

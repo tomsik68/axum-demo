@@ -3,10 +3,8 @@ use utoipa::OpenApi;
 
 mod api;
 mod app;
-mod in_memory_todo;
 mod ioc;
 mod observability;
-mod todo_service;
 
 use observability::*;
 

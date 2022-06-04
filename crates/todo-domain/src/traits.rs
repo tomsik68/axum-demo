@@ -12,9 +12,8 @@ pub enum TodoError {
     TodoNotFound(usize),
 }
 
-trait_set::trait_set! {
-    pub trait SencFut<T, E> = Future<Output = Result<T, E>> + Send + Sync + 'static;
-}
+pub trait SencFut<T, E>: Future<Output = Result<T, E>> + Send + Sync + 'static {}
+impl<T, E, F> SencFut<T, E> for F where F: Future<Output = Result<T, E>> + Send + Sync + 'static {}
 
 pub trait TodoService {
     type AddTodoFuture: SencFut<Todo, TodoError>;

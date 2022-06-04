@@ -1451,6 +1451,13 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "42657b1a6f4d817cda8e7a0ace261fe0cc946cf3a80314390b22cc61ae080792"
 
 [[package]]
+name = "todo-domain"
+version = "0.1.0"
+dependencies = [
+ "thiserror",
+]
+
+[[package]]
 name = "todo-restful"
 version = "0.1.0"
 dependencies = [
@@ -1466,6 +1473,7 @@ dependencies = [
  "serde",
  "serde_json",
  "thiserror",
+ "todo-domain",
  "tokio",
  "tower",
  "tower-http",

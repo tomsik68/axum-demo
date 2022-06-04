@@ -1,10 +1,10 @@
 use crate::{
     api::model::*,
     ioc::{ThreadSafeContainer, TodoFact},
-    todo_service::TodoService,
 };
 use axum::Extension;
 use axum::{extract::Path, Json};
+use todo_domain::TodoService;
 use tracing::instrument;
 
 #[instrument(skip(deps))]

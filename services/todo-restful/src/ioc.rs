@@ -1,7 +1,7 @@
 use std::sync::Arc;
 use std::{marker::PhantomData, sync::Mutex};
 
-use crate::{in_memory_todo::InMemoryTodo, todo_service::Todo, todo_service::TodoService};
+use todo_domain::{InMemoryTodo, Todo, TodoService};
 use typed_builder::TypedBuilder;
 
 trait_set::trait_set! {pub trait Senc = Send + Sync + 'static}

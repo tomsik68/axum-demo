@@ -1,7 +1,7 @@
 use std::future::Ready;
 use std::sync::{Arc, Mutex};
 
-use crate::todo_service::{Todo, TodoError, TodoService};
+use crate::{Todo, TodoError, TodoService};
 
 #[derive(Clone, Default)]
 pub struct InMemoryTodo {
