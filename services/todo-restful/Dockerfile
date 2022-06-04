@@ -22,11 +22,11 @@ COPY --from=planner /app/recipe.json recipe.json
 RUN cargo chef cook --release --recipe-path recipe.json
 # Build application
 COPY . .
-RUN cargo build --release --bin axum-demo
+RUN cargo build --release --bin todo-restful
 
 # We do not need the Rust toolchain to run the binary!
 FROM gcr.io/distroless/cc AS runtime
 WORKDIR app
-COPY --from=builder /app/target/release/axum-demo /usr/local/bin/app
+COPY --from=builder /app/target/release/todo-restful /usr/local/bin/app
 ENTRYPOINT ["/usr/local/bin/app"]
 EXPOSE 8080

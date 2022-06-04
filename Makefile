@@ -10,4 +10,4 @@ del-cluster:
 	k3d cluster delete $(CLUSTER)
 
 dev:
-	skaffold dev
+	tilt up

@@ -1,17 +1,17 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: axum-demo
+  name: todo-restful
   labels:
-    app: axum-demo
+    app: todo-restful
 spec:
   selector:
     matchLabels:
-      app: axum-demo
+      app: todo-restful
   template:
     metadata:
       labels:
-        app: axum-demo
+        app: todo-restful
     spec:
       containers:
       - name: {{ .Chart.Name }}
