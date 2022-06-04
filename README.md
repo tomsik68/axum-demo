@@ -1,5 +1,7 @@
 # axum-demo
 
+## todo-restful
+
 This repo showcases a simple Rust web service using the [axum](https://lib.rs/axum) web framework.
 
 The service additionally has:
@@ -10,14 +12,14 @@ The service additionally has:
 - [helm](https://helm.sh) chart
 - [tilt](https://tilt.dev) configuration (including opentelemetry collector!)
 
-# Requirements
+### Requirements
 
 - [Docker](https://docker.com) (for k3d to work)
 - [k3d](https://k3d.io)
 - [tilt](https://tilt.dev)
 - [kubectl](https://kubernetes.io)
 
-# Running
+### Running
 
 ```bash
 $ tilt up
