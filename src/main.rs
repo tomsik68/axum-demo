@@ -1,7 +1,8 @@
 use std::net::SocketAddr;
+use utoipa::OpenApi;
 
+mod api;
 mod app;
-mod endpoint;
 mod in_memory_todo;
 mod ioc;
 mod observability;

@@ -1,2 +1,8 @@
 target
 Dockerfile
+Tiltfile
+helm
+deployment.yaml
+Makefile
+skaffold.yaml
+tests

@@ -5,14 +5,18 @@ RUN wget https://github.com/mozilla/sccache/releases/download/v0.2.15/sccache-v0
     && mv sccache-v0.2.15-x86_64-unknown-linux-musl/sccache /usr/local/bin/sccache \
     && chmod +x /usr/local/bin/sccache
 ENV RUSTC_WRAPPER=/usr/local/bin/sccache
+RUN mkdir /.cargo
+ENV CARGO_HOME=/.cargo
 
 WORKDIR app
 
 FROM chef AS planner
 COPY . .
+COPY --from=chef /.cargo /.cargo
 RUN cargo chef prepare --recipe-path recipe.json
 
 FROM chef AS builder
+COPY --from=planner /.cargo /.cargo
 COPY --from=planner /app/recipe.json recipe.json
 # Build dependencies - this is the caching Docker layer!
 RUN cargo chef cook --release --recipe-path recipe.json

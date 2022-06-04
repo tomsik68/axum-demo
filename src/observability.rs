@@ -1,8 +1,8 @@
 use axum::Router;
-use tracing::Level;
 
+use http::Request;
 use tower_http::request_id::{MakeRequestId, RequestId, SetRequestIdLayer};
-use tower_http::trace::{DefaultMakeSpan, TraceLayer};
+use tower_http::trace::{MakeSpan, TraceLayer};
 use uuid::Uuid;
 
 #[derive(Default, Clone)]
@@ -51,13 +51,16 @@ pub(crate) fn init_tracing() {
     tracing::subscriber::set_global_default(subscriber).unwrap();
 }
 
+#[derive(Clone)]
+struct CustomMakeSpan;
+
+impl<B> MakeSpan<B> for CustomMakeSpan {
+    fn make_span(&mut self, request: &Request<B>) -> tracing::Span {
+        tracing::info_span!("request", method = %request.method(), uri = %request.uri(), version = ?request.version(), headers = ?request.headers())
+    }
+}
+
 pub(crate) fn make_observable(app: Router<axum::body::Body>) -> Router<axum::body::Body> {
-    app.layer(
-        TraceLayer::new_for_http().make_span_with(
-            DefaultMakeSpan::new()
-                .level(Level::INFO)
-                .include_headers(true),
-        ),
-    )
-    .layer(SetRequestIdLayer::x_request_id(UuidRequestId::default()))
+    app.layer(TraceLayer::new_for_http().make_span_with(CustomMakeSpan))
+        .layer(SetRequestIdLayer::x_request_id(UuidRequestId::default()))
 }

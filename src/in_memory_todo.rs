@@ -1,10 +1,7 @@
-use std::future::Future;
-use std::pin::Pin;
+use std::future::Ready;
 use std::sync::{Arc, Mutex};
-use tracing::instrument;
 
-use crate::todo_service::{Todo, TodoError, TodoRequest, TodoResponse};
-use tower::Service;
+use crate::todo_service::{Todo, TodoError, TodoService};
 
 #[derive(Clone, Default)]
 pub struct InMemoryTodo {
@@ -17,59 +14,40 @@ impl InMemoryTodo {
     }
 }
 
-impl Service<TodoRequest> for InMemoryTodo {
-    type Future =
-        Pin<Box<dyn Future<Output = Result<Self::Response, Self::Error>> + Send + Sync + 'static>>;
-    type Response = TodoResponse;
-    type Error = TodoError;
-
-    #[instrument(skip(self))]
-    fn call(&mut self, req: TodoRequest) -> Self::Future {
-        let todos = Arc::clone(&self.todos);
-        Box::pin(async move {
-            let mut todos = todos.try_lock().unwrap();
-            match req {
-                TodoRequest::AddTodo(s) => {
-                    let id = todos.len();
-                    let added = Todo { id, text: s };
-                    todos.push(added.clone());
-                    Ok(TodoResponse::TodoAdded(added))
-                }
-                TodoRequest::GetTodo(id) => todos
-                    .get(id)
-                    .cloned()
-                    .map(TodoResponse::TodoFound)
-                    .ok_or(TodoError::TodoNotFound(id)),
-                TodoRequest::DeleteTodo(id) => {
-                    let resp = todos
-                        .get(id)
-                        .cloned()
-                        .map(TodoResponse::TodoDeleted)
-                        .ok_or(TodoError::TodoNotFound(id));
-                    todos.remove(id);
-                    resp
-                }
-                TodoRequest::ListTodos => Ok(TodoResponse::TodoList(todos.clone())),
-            }
-        })
+impl TodoService for InMemoryTodo {
+    type AddTodoFuture = Ready<Result<Todo, TodoError>>;
+    fn add_todo(&self, text: String) -> Self::AddTodoFuture {
+        let mut todos = self.todos.try_lock().unwrap();
+        let id = todos.len();
+        let added = Todo { id, text };
+        todos.push(added.clone());
+        std::future::ready(Ok(added))
     }
 
-    fn poll_ready(
-        &mut self,
-        _cx: &mut std::task::Context<'_>,
-    ) -> std::task::Poll<Result<(), Self::Error>> {
-        std::task::Poll::Ready(Ok(()))
+    type ListTodosFuture = Ready<Result<Vec<Todo>, TodoError>>;
+    fn list_todos(&self) -> Self::ListTodosFuture {
+        std::future::ready(Ok(self.todos.try_lock().unwrap().clone()))
     }
-}
 
-#[cfg(test)]
-mod tests {
-    use super::InMemoryTodo;
+    type GetTodoFuture = Ready<Result<Todo, TodoError>>;
+    fn get_todo(&self, id: usize) -> Self::GetTodoFuture {
+        std::future::ready(
+            self.todos
+                .try_lock()
+                .unwrap()
+                .get(id)
+                .cloned()
+                .ok_or(TodoError::TodoNotFound(id)),
+        )
+    }
 
-    fn assert_send_sync<T: Send + Sync + 'static>() {}
-
-    #[test]
-    fn test_in_memory_todo_send_sync() {
-        assert_send_sync::<InMemoryTodo>();
+    type DeleteTodoFuture = Ready<Result<Todo, TodoError>>;
+    fn delete_todo(&self, id: usize) -> Self::DeleteTodoFuture {
+        let mut todos = self.todos.try_lock().unwrap();
+        let resp = todos.get(id).cloned().ok_or(TodoError::TodoNotFound(id));
+        if id < todos.len() {
+            todos.remove(id);
+        }
+        std::future::ready(resp)
     }
 }

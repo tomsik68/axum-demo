@@ -1,50 +1,33 @@
-use std::convert::Infallible;
-use std::future::Future;
-use std::pin::Pin;
 use std::sync::Arc;
-use std::task::Poll;
 use std::{marker::PhantomData, sync::Mutex};
 
-use crate::todo_service::TodoRequest;
-use crate::{
-    in_memory_todo::InMemoryTodo,
-    todo_service::Todo,
-    todo_service::{TodoError, TodoResponse, TodoService},
-};
-use tower::{MakeService, Service};
+use crate::{in_memory_todo::InMemoryTodo, todo_service::Todo, todo_service::TodoService};
 use typed_builder::TypedBuilder;
 
 trait_set::trait_set! {pub trait Senc = Send + Sync + 'static}
-trait_set::trait_set! {pub trait TodoFuture = Future<Output = Result<TodoResponse, TodoError>> + Senc}
 
 #[derive(TypedBuilder, degeneric_macros::Degeneric)]
 #[degeneric(trait = "pub trait ContainerTrait")]
-pub struct Container<TodoFactory, Todo, TodoFut>
+pub struct Container<TodoFactory, Todo>
 where
-    Todo: TodoService<TodoFut> + Senc,
-    TodoFut: TodoFuture,
+    Todo: TodoService + Senc,
     TodoFactory: TodoFact<Todo> + Senc + Clone,
 {
     todo_factory: TodoFactory,
 
     #[builder(default)]
     _todo: PhantomData<Todo>,
-
-    #[builder(default)]
-    _todo_fut: PhantomData<TodoFut>,
 }
 
-impl<TodoFactory, Todo, TodoFut> Clone for Container<TodoFactory, Todo, TodoFut>
+impl<TodoFactory, Todo> Clone for Container<TodoFactory, Todo>
 where
     TodoFactory: Clone + TodoFact<Todo> + Senc,
-    TodoFut: TodoFuture,
-    Todo: TodoService<TodoFut> + Senc,
+    Todo: TodoService + Senc,
 {
     fn clone(&self) -> Self {
         Self {
             todo_factory: self.todo_factory.clone(),
             _todo: PhantomData,
-            _todo_fut: PhantomData,
         }
     }
 }
