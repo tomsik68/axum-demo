@@ -1,5 +1,5 @@
-use super::model::*;
 use super::route::*;
+use todo_http_schemas::*;
 
 #[derive(utoipa::OpenApi)]
 #[openapi(

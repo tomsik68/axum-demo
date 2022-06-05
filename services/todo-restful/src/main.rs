@@ -1,5 +1,4 @@
 use std::net::SocketAddr;
-use utoipa::OpenApi;
 
 mod api;
 mod app;

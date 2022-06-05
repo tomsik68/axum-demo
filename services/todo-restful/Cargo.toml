@@ -26,13 +26,12 @@ opentelemetry-otlp = { version = "*" }
 thiserror = "1"
 anyhow = "1"
 http = "0.2"
-fake = { version = "2", features = ["derive"] }
-rand = "*"
 utoipa = "1"
 utoipa-swagger-ui = "1"
 
 # workspace dependencies
 todo-domain = {version = "0.1", path = "../../crates/todo-domain" }
+todo-http-schemas = {version = "0.1", path = "../../crates/todo-http-schemas" }
 
 [dev-dependencies]
 hyper = { version = "0.14", features = ["full"] }

@@ -1458,22 +1458,32 @@ dependencies = [
 ]
 
 [[package]]
+name = "todo-http-schemas"
+version = "0.1.0"
+dependencies = [
+ "fake",
+ "rand",
+ "serde",
+ "todo-domain",
+ "utoipa",
+]
+
+[[package]]
 name = "todo-restful"
 version = "0.1.0"
 dependencies = [
  "anyhow",
  "axum",
  "degeneric-macros",
- "fake",
  "http",
  "hyper",
  "opentelemetry",
  "opentelemetry-otlp",
- "rand",
  "serde",
  "serde_json",
  "thiserror",
  "todo-domain",
+ "todo-http-schemas",
  "tokio",
  "tower",
  "tower-http",
